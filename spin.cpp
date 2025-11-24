@@ -1,86 +1,52 @@
-
-#include <GL/glut.h>
-
-float angle = 0.0f;
-
-void cube() {
-    glBegin(GL_QUADS);
-
-    glColor3f(1,0,0);
-    glVertex3f(0.5,-0.5,-0.5);
-    glVertex3f(0.5, 0.5,-0.5);
-    glVertex3f(0.5, 0.5, 0.5);
-    glVertex3f(0.5,-0.5, 0.5);
-
-    glColor3f(0,1,0);
-    glVertex3f(-0.5,-0.5, 0.5);
-    glVertex3f(-0.5, 0.5, 0.5);
-    glVertex3f(-0.5, 0.5,-0.5);
-    glVertex3f(-0.5,-0.5,-0.5);
-
-    glColor3f(0,0,1);
-    glVertex3f(-0.5, 0.5,-0.5);
-    glVertex3f( 0.5, 0.5,-0.5);
-    glVertex3f( 0.5, 0.5, 0.5);
-    glVertex3f(-0.5, 0.5, 0.5);
-
-    glColor3f(1,1,0);
-    glVertex3f(-0.5,-0.5, 0.5);
-    glVertex3f( 0.5,-0.5, 0.5);
-    glVertex3f( 0.5,-0.5,-0.5);
-    glVertex3f(-0.5,-0.5,-0.5);
-
-    glColor3f(1,0,1);
-    glVertex3f(-0.5,-0.5, 0.5);
-    glVertex3f(-0.5, 0.5, 0.5);
-    glVertex3f( 0.5, 0.5, 0.5);
-    glVertex3f( 0.5,-0.5, 0.5);
-
-    glColor3f(0,1,1);
-    glVertex3f( 0.5,-0.5,-0.5);
-    glVertex3f( 0.5, 0.5,-0.5);
-    glVertex3f(-0.5, 0.5,-0.5);
-    glVertex3f(-0.5,-0.5,-0.5);
-
-    glEnd();
-}
-
-void display() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
-
-    glTranslatef(0,0,-3);
-    glRotatef(angle, 1,1,1);
-
-    cube();
-    glutSwapBuffers();
-}
-
-void idle() {
-    angle += 0.2f;
-    glutPostRedisplay();
-}
-
-void reshape(int w, int h) {
-    glViewport(0,0,w,h);
+#include<GL/glu.h>
+#include<gl/glut.h>
+#include<iostream>
+using namespace std;
+float angle =0.0f;
+void init()
+{
+    glClearColor(0,0,0,1);
+    glEnable(GL_DEPTH_TEST);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60.0, (float)w/h, 0.1, 100);
+    gluPerspective(45,1.0,1.0,50.0);
     glMatrixMode(GL_MODELVIEW);
 }
-
-int main(int argc, char** argv) {
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(600, 600);
-    glutCreateWindow("Simple Spinning Color Cube");
-
-    glEnable(GL_DEPTH_TEST);
-
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    glTranslatef(0.0f,0.f,-7.0f);
+    glRotatef(angle,1.0f,1.0f,1.0f);
+    glColor3f(1,0,0);
+    glutSolidCube(2.0);
+    glColor3f(1,1,1);
+    glLineWidth(2.0);
+    glutWireCube(2.02);
+    glutSwapBuffers();
+}
+void timer(int value)
+{
+    angle += 1.0f;
+    if(angle>360)
+    {
+        angle=0;
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16,timer,0);
+}
+int main(int argc,char** argv)
+{
+    glutInit(&argc,argv);
+    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+    glutInitWindowSize(500,500);
+    glutInitWindowPosition(100,100);
+    glutCreateWindow("Spinning Cube");
+    init();
     glutDisplayFunc(display);
-    glutIdleFunc(idle);
-    glutReshapeFunc(reshape);
-
+    glutTimerFunc(0,timer,0);
     glutMainLoop();
     return 0;
+
 }
+
